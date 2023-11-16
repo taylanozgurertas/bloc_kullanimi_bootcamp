@@ -1,0 +1,88 @@
+bizim örneğimizde tek türle cubit çalışması vardı bu örnek ile tek sayfa için birden fazla farklı türde şeyleri yönetebiliriz
+vanilla yonteminde modelli sınıfla cubit kullanımı
+
+//cubit
+
+class AnasayfaCubit extends Cubit<AnasayfaModel> {
+
+  AnasayfaCubit() : super(AnasayfaModel());
+
+  void metinDegistir(String metin) {
+    emit(state.copyWith(metin: metin));
+  }
+
+  void sayiDegistir(int sayi) {
+    emit(state.copyWith(sayi: sayi));
+  }
+
+  void tarihDegistir(DateTime tarih) {
+    emit(state.copyWith(tarih: tarih));
+  }
+}
+
+
+//model sinif
+class AnasayfaModel {
+  String metin;
+  int sayi;
+  DateTime tarih;
+
+  AnasayfaModel({this.metin, this.sayi, this.tarih});
+
+  AnasayfaModel copyWith({String metin, int sayi, DateTime tarih}) {
+    return AnasayfaModel(
+      metin: metin ?? this.metin,
+      sayi: sayi ?? this.sayi,
+      tarih: tarih ?? this.tarih,
+    );
+  }
+}
+
+
+
+
+//ana sayfa için:
+
+
+class Anasayfa extends StatefulWidget {
+
+  @override
+  _AnasayfaState createState() => _AnasayfaState();
+}
+
+class _AnasayfaState extends State<Anasayfa> {
+
+  @override
+  void initState() {
+    // Cubit'i başlat
+    super.initState();
+    anasayfaCubit.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Anasayfa"),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            // Metin değerini göster
+            Text(anasayfaCubit.state.metin),
+            // Sayı değerini göster
+            Text(anasayfaCubit.state.sayi.toString()),
+            // Tarih değerini göster
+            Text(anasayfaCubit.state.tarih.toString()),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+
+
+
+
